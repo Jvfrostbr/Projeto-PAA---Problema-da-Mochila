@@ -1,18 +1,24 @@
 package model;
 
 public class Item {
+    private String nome;
     private int peso;
     private int valor;
     private double densidade;
 
-    //Construtor
-    public Item(int peso, int valor) {
+    // Construtor
+    public Item(String nome, int peso, int valor) {
+        this.nome = nome;
         this.peso = peso;
         this.valor = valor;
         this.densidade = (double) valor / peso;
     }
 
-    // Gets and Sets
+    // Getters
+    public String getNome() {
+        return nome;
+    }
+
     public int getPeso() {
         return peso;
     }
@@ -27,7 +33,10 @@ public class Item {
 
     @Override
     public String toString() {
-        return String.format("Item(peso=%d, valor=%d, densidade=%.2f)",
-                             peso, valor, densidade);
+        return String.format(
+                "%-12s | peso: %2d | valor: %3d | densidade: %5.2f",
+                nome, peso, valor, densidade
+        );
     }
+
 }

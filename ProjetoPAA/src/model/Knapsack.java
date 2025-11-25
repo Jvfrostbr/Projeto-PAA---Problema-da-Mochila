@@ -16,7 +16,7 @@ public class Knapsack {
     }
 
     // Métodos
-    public void solveDP(List<Item> items) {
+    public void solveDP(List<Item> items, boolean mostrarMatriz) {
         int n = items.size();
         int[][] dp = new int[n + 1][capacity + 1];
 
@@ -34,6 +34,11 @@ public class Knapsack {
                     dp[i][w] = dp[i - 1][w];
                 }
             }
+        }
+
+        // Se o usuário pediu pra mostrar a matriz DP, imprime ela também
+        if (mostrarMatriz) {
+            imprimirMatrizDP(dp, items);
         }
 
         // Valor máximo
@@ -71,6 +76,56 @@ public class Knapsack {
             }
         }
     }
+
+    private void imprimirMatrizDP(int[][] dp, List<Item> items) {
+
+        System.out.println("\n============== MATRIZ DP ==============\n");
+
+        int colWidth = 5;  // largura fixa das colunas
+
+        // Cabeçalho
+        System.out.printf("%-10s", "");
+        for (int w = 0; w <= capacity; w++) {
+            System.out.printf("%" + colWidth + "d", w);
+        }
+        System.out.println();
+
+        // Linha superior
+        System.out.print("-----------");
+        for (int w = 0; w <= capacity; w++) {
+            System.out.print("-----");
+        }
+        System.out.println();
+
+        // Linhas da matriz
+        for (int i = 0; i < dp.length; i++) {
+
+            // Nome do item na linha
+            if (i == 0) {
+                System.out.printf("%-10s", "0");
+            } else {
+                String nome = items.get(i - 1).getNome();
+
+                // se o nome for maior que 10 caracteres, corta o nome e completa com reticências
+                if (nome.length() > 10) {
+                    nome = nome.substring(0, 7) + "...";
+                }
+
+                System.out.printf("%-10s", nome);
+            }
+
+            // Conteúdo da linha
+            for (int j = 0; j <= capacity; j++) {
+                System.out.printf("%" + colWidth + "d", dp[i][j]);
+            }
+
+            System.out.println();
+        }
+
+        System.out.println("\n====================================================================================================================\n");
+    }
+
+
 
     // Gets
     public int getTotalValue() {
