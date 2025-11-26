@@ -8,12 +8,10 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        menu();   // <- Menu limpo e isolado
+        menu();
     }
 
     private static void menu() {
-
-
 
         // Exemplo de itens
         List<Item> items = new ArrayList<>();
@@ -26,7 +24,7 @@ public class Main {
         items.add(new Item("Celular", 8, 85));
         items.add(new Item("Notebook", 9, 90));
 
-        int knapsack_capacity = 20;
+        int knapsack_capacity = 10;
         Knapsack knapsack = new Knapsack(knapsack_capacity);
 
         int option = -1;

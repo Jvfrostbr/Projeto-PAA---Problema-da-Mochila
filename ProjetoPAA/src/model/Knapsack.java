@@ -24,14 +24,17 @@ public class Knapsack {
         for (int i = 1; i <= n; i++) {
             Item item = items.get(i - 1);
 
-            for (int w = 1; w <= capacity; w++) {
-                if (item.getPeso() <= w) {
-                    dp[i][w] = Math.max(
-                            item.getValor() + dp[i - 1][w - item.getPeso()],
-                            dp[i - 1][w]
+            for (int j = 1; j <= capacity; j++) {
+                // Se o item atual couber na mochila
+                if (item.getPeso() <= j) {
+
+                    // Max: (Com item) vs (Sem item)
+                    dp[i][j] = Math.max(
+                            item.getValor() + dp[i - 1][j - item.getPeso()],
+                            dp[i - 1][j]
                     );
                 } else {
-                    dp[i][w] = dp[i - 1][w];
+                    dp[i][j] = dp[i - 1][j]; // Mantém o anterior
                 }
             }
         }
@@ -47,13 +50,17 @@ public class Knapsack {
         // Backtracking
         chosenItems.clear();
         int w = capacity;
-        int valueTracker = totalValue;
+        int val = totalValue;
 
-        for (int i = n; i > 0 && valueTracker > 0; i--) {
-            if (valueTracker != dp[i - 1][w]) {
+        // Começa do fim (último item, capacidade total)
+        for (int i = n; i > 0 && val > 0; i--) {
+            // Se o valor mudou em relação à linha de cima...
+            if (val != dp[i - 1][w]) {
+                // Significa que este item foi escolhido
                 Item item = items.get(i - 1);
                 chosenItems.add(item);
-                valueTracker -= item.getValor();
+                // Subtrai valor e peso para continuar voltando
+                val -= item.getValor();
                 w -= item.getPeso();
             }
         }
@@ -69,7 +76,9 @@ public class Knapsack {
 
         int currentWeight = 0;
         for (Item item : sorted) {
+            // Se couber na mochila
             if (currentWeight + item.getPeso() <= capacity) {
+                // Adiciona o item, atualiza o peso atual da mochila e o valor total dos itens
                 chosenItems.add(item);
                 currentWeight += item.getPeso();
                 totalValue += item.getValor();
@@ -81,37 +90,38 @@ public class Knapsack {
 
         System.out.println("\n============== MATRIZ DP ==============\n");
 
-        int colWidth = 5;  // largura fixa das colunas
+        int colWidth = 5; // largura fixa
 
         // Cabeçalho
-        System.out.printf("%-10s", "");
+        System.out.printf("%-6s %-12s", "Peso", "Item");
         for (int w = 0; w <= capacity; w++) {
             System.out.printf("%" + colWidth + "d", w);
         }
         System.out.println();
 
-        // Linha superior
-        System.out.print("-----------");
+        // Linha separadora
+        System.out.print("----------------------------------------------------------------");
         for (int w = 0; w <= capacity; w++) {
-            System.out.print("-----");
+            System.out.print("---");
         }
         System.out.println();
 
         // Linhas da matriz
         for (int i = 0; i < dp.length; i++) {
 
-            // Nome do item na linha
             if (i == 0) {
-                System.out.printf("%-10s", "0");
+                // linha 0: sem item, sem peso
+                System.out.printf("%-6s %-12s", "0", "0");
             } else {
-                String nome = items.get(i - 1).getNome();
+                Item item = items.get(i - 1);
+                String nome = item.getNome();
 
-                // se o nome for maior que 10 caracteres, corta o nome e completa com reticências
-                if (nome.length() > 10) {
-                    nome = nome.substring(0, 7) + "...";
+                // Limita nome a 12 chars
+                if (nome.length() > 12) {
+                    nome = nome.substring(0, 9) + "...";
                 }
 
-                System.out.printf("%-10s", nome);
+                System.out.printf("%-6d %-12s", item.getPeso(), nome);
             }
 
             // Conteúdo da linha
@@ -122,8 +132,9 @@ public class Knapsack {
             System.out.println();
         }
 
-        System.out.println("\n====================================================================================================================\n");
+        System.out.println("\n===================================================================================================\n");
     }
+
 
 
 
