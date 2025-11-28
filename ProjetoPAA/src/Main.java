@@ -69,8 +69,7 @@ public class Main {
 
                 case 2:
                     System.out.println("\n====== Mochila (Guloso) ======");
-                    knapsack.solveGreedy(items);
-                    printTable(knapsack.getChosenItems(), knapsack.getTotalValue());
+                    submenuGredy(knapsack, items);
                     break;
 
                 case 0:
@@ -88,8 +87,8 @@ public class Main {
         int option;
 
         System.out.println("\n====== Programação Dinâmica ======");
-        System.out.println("1 - Resolver e mostrar matriz DP");
-        System.out.println("2 - Resolver sem mostrar matriz");
+        System.out.println("1 - mostrar matriz DP");
+        System.out.println("2 - sem mostrar matriz");
         System.out.println("0 - Voltar");
         System.out.print("Escolha: ");
         option = scanner.nextInt();
@@ -104,6 +103,36 @@ public class Main {
             case 2:
                 System.out.println("\n====== Mochila (Programação Dinâmica) ======");
                 knapsack.solveDP(items, false);
+                printTable(knapsack.getChosenItems(), knapsack.getTotalValue());
+                break;
+
+            case 0:
+                return;
+
+            default:
+                System.out.println("\nOpção inválida!");
+        }
+    }
+
+    private static void submenuGredy(Knapsack knapsack, List<Item> items) {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+
+        System.out.println("\n====== Programação Dinâmica ======");
+        System.out.println("1 - mostrar matriz");
+        System.out.println("2 - sem mostrar matriz");
+        System.out.println("0 - Voltar");
+        System.out.print("Escolha: ");
+        option = scanner.nextInt();
+
+        switch (option) {
+            case 1:
+                knapsack.solveGreedy(items, true);
+                printTable(knapsack.getChosenItems(), knapsack.getTotalValue());
+                break;
+
+            case 2:
+                knapsack.solveGreedy(items, false);
                 printTable(knapsack.getChosenItems(), knapsack.getTotalValue());
                 break;
 

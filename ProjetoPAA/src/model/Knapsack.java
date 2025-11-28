@@ -66,7 +66,7 @@ public class Knapsack {
         }
     }
 
-    public void solveGreedy(List<Item> items) {
+    public void solveGreedy(List<Item> items, boolean mostrarTabela) {
         chosenItems.clear();
         totalValue = 0;
 
@@ -74,16 +74,74 @@ public class Knapsack {
         List<Item> sorted = new ArrayList<>(items);
         sorted.sort(Comparator.comparingDouble(Item::getDensidade).reversed());
 
+        // CHAMA A NOVA FUNÇÃO AQUI
+        if (mostrarTabela) {
+            printTableGredy("cabeçalho",false, 0, null);;
+        }
+        
         int currentWeight = 0;
+
+        // Itera sobre a lista já ordenada
         for (Item item : sorted) {
-            // Se couber na mochila
-            if (currentWeight + item.getPeso() <= capacity) {
-                // Adiciona o item, atualiza o peso atual da mochila e o valor total dos itens
+            boolean cabe = (currentWeight + item.getPeso() <= capacity);
+            
+            if (mostrarTabela) {
+                printTableGredy("meio",cabe, currentWeight, item);
+            }
+
+            // Se cabe atualiza os itens, o peso atual e o valor total contido na mochila
+            if (cabe) {
                 chosenItems.add(item);
                 currentWeight += item.getPeso();
                 totalValue += item.getValor();
             }
         }
+
+        if (mostrarTabela) {
+            printTableGredy("fim",false, currentWeight, null);
+        }
+    }
+
+    private void printTableGredy(String partTablePrinted , boolean cabe, int currentWeight, Item item){
+
+        switch (partTablePrinted) {
+            case "cabeçalho":
+                System.out.printf("\n%-13s %-7s %-6s %-12s %-10s %-20s%n", 
+                    "Item", "Peso", "Valor", "Densidade", "Decisão", "Motivo");
+                System.out.println("-------------------------------------------------------------------------");
+            break;
+            
+            case "meio":
+                String decisao = cabe ? "ENTROU" : "NÃO CABE";
+                    
+                String motivo = String.format("%d + %d = %d %s %d", 
+                        currentWeight, 
+                        item.getPeso(), 
+                        (currentWeight + item.getPeso()), 
+                        (cabe ? "<=" : ">"), 
+                        capacity);
+
+                System.out.printf("%-13s %-7d %-6d %-12.2f %-10s %-20s%n",
+                        formatName(item.getNome()),
+                        item.getPeso(),
+                        item.getValor(),
+                        item.getDensidade(),
+                        decisao,
+                        motivo
+                );
+            break;
+
+            case "fim":
+                System.out.println("-------------------------------------------------------------------------");
+                System.out.println("Peso Final: " + currentWeight + " / " + capacity);
+                System.out.println("=========================================================================\n");
+             break;
+        }
+    }
+
+    private String formatName(String name) {
+        if (name.length() > 10) return name.substring(0, 9) + ".";
+        return name;
     }
 
     private void imprimirMatrizDP(int[][] dp, List<Item> items) {
